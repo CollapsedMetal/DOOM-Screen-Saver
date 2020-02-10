@@ -30,8 +30,10 @@ namespace Doom_Screen_Saver {
         #endregion
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        int maxWalkDistance = 20;
-        int spawnTime = 2000;
+        int maxWalkDistance = 50;
+        int spawnTime = 2500;
+        int animationDelay = 100;
+        int monsterSpeed = 5;
         Random random = new Random();
         bool IsPreviewMode = false;
 
@@ -149,7 +151,7 @@ namespace Doom_Screen_Saver {
                 }
 
                 try {
-                    res.WaitOne(spawnTime); //Buggy... not catching exception
+                    res.WaitOne(spawnTime);
                 } catch (InvalidOperationException) {
                     System.Diagnostics.Debug.WriteLine("Resources Exhausted?");
                 }
@@ -186,7 +188,7 @@ namespace Doom_Screen_Saver {
                         Entity.Image = i; //Change Image
                         Entity.Refresh();
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(animationDelay);
                 } catch (Exception) { }
             }
 
@@ -221,7 +223,7 @@ namespace Doom_Screen_Saver {
                         //Entity.SendToBack();
                         Entity.Refresh();
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(animationDelay);
                 } catch (Exception) { }
             }
         }
@@ -249,14 +251,14 @@ namespace Doom_Screen_Saver {
                     try {
                         lock (lockObject) {
                             if (Direction == 'R') {
-                                Entity.Location = new Point(Entity.Location.X + 5, Entity.Location.Y); //Move Entity Right
+                                Entity.Location = new Point(Entity.Location.X + monsterSpeed, Entity.Location.Y); //Move Entity Right
                             } else {
-                                Entity.Location = new Point(Entity.Location.X - 5, Entity.Location.Y); //Move Entity Left
+                                Entity.Location = new Point(Entity.Location.X - monsterSpeed, Entity.Location.Y); //Move Entity Left
                             }
                             Entity.Image = i; //Change Image
                             Entity.Refresh();
                         }
-                        Thread.Sleep(100);
+                        Thread.Sleep(animationDelay);
                     } catch (Exception) { }
                 }
             }
