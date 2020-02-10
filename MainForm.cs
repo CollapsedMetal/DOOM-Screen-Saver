@@ -29,7 +29,7 @@ namespace Doom_Screen_Saver {
         #endregion
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        int maxWalkDistance = 30;
+        int maxWalkDistance = 50;
         int spawnTime = 2000;
 
         bool IsPreviewMode = false;
@@ -135,11 +135,11 @@ namespace Doom_Screen_Saver {
 
                 if (RandomIoD == 1) { //Show up from left side of screen
                     Entity.Location = new Point(LeftBound - 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R'));
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith((i) =>  Walk(Entity, RMonster, 'L'));;
                     RandomIoD = 2;
                 } else if (RandomIoD == 2) { //Show up from right side of screen
                     Entity.Location = new Point(RightBound + 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L'));
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith((i) =>  Walk(Entity, RMonster, 'R'));
                     RandomIoD = 1;
                 }
 
@@ -191,16 +191,18 @@ namespace Doom_Screen_Saver {
             int iter = rnd.Next(1, maxWalkDistance); //Walk Random Distance
             for (int x = 0; x < iter; x++) {
                 foreach (Image i in images) {
-                    lock (lockObject) {
-                        if (Direction == 'R') {
-                            Entity.Location = new Point(Entity.Location.X + 5, Entity.Location.Y); //Move Entity Right
-                        } else {
-                            Entity.Location = new Point(Entity.Location.X - 5, Entity.Location.Y); //Move Entity Left
+                    try {
+                        lock (lockObject) {
+                            if (Direction == 'R') {
+                                Entity.Location = new Point(Entity.Location.X + 5, Entity.Location.Y); //Move Entity Right
+                            } else {
+                                Entity.Location = new Point(Entity.Location.X - 5, Entity.Location.Y); //Move Entity Left
+                            }
+                            Entity.Image = i; //Change Image
+                            Entity.Refresh();
                         }
-                        Entity.Image = i; //Change Image
-                        Entity.Refresh();
-                    }
-                    Thread.Sleep(100);
+                        Thread.Sleep(100);
+                    } catch (Exception) { }
                 }
             }
 
