@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
+using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Doom_Screen_Saver {
 
@@ -28,7 +30,7 @@ namespace Doom_Screen_Saver {
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
         int maxWalkDistance = 30;
-        int spawnTime = 100;
+        int spawnTime = 2000;
 
         bool IsPreviewMode = false;
 
@@ -108,6 +110,8 @@ namespace Doom_Screen_Saver {
                 Thread.Sleep(1000);
             }
 
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+
             //this.BackColor = Color.FromArgb(0, 0, 30);
             this.BackColor = Color.Magenta;
             this.TransparencyKey = Color.Magenta;
@@ -129,18 +133,17 @@ namespace Doom_Screen_Saver {
                 //Entity.BorderStyle = BorderStyle.FixedSingle;        
                 Controls.Add(Entity);
 
-                if(RandomIoD == 1) { //Show up from left side of screen
+                if (RandomIoD == 1) { //Show up from left side of screen
                     Entity.Location = new Point(LeftBound - 10, RandomYStart);
-                    Walk(Entity, RMonster, 'R');
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R'));
                     RandomIoD = 2;
-                } else if(RandomIoD == 2) { //Show up from right side of screen
+                } else if (RandomIoD == 2) { //Show up from right side of screen
                     Entity.Location = new Point(RightBound + 10, RandomYStart);
-                    Walk(Entity, RMonster, 'L');
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L'));
                     RandomIoD = 1;
                 }
 
-
-                Thread.Sleep(spawnTime);
+                new ManualResetEvent(false).WaitOne(spawnTime);
             }
 
         }
@@ -168,7 +171,10 @@ namespace Doom_Screen_Saver {
             Entity.Refresh();
         }
 
+        private object lockObject = new object();
         public void Walk(PictureBox Entity, Monsters m, char Direction) {
+
+             CheckForIllegalCrossThreadCalls = false;
 
             string path = MainDirectory + "\\Resources\\" + m;
             List<Image> images = new List<Image>();
@@ -185,18 +191,20 @@ namespace Doom_Screen_Saver {
             int iter = rnd.Next(1, maxWalkDistance); //Walk Random Distance
             for (int x = 0; x < iter; x++) {
                 foreach (Image i in images) {
-                    if (Direction == 'R') {
-                        Entity.Location = new Point(Entity.Location.X + 5, Entity.Location.Y); //Move Entity Right
-                    } else {
-                        Entity.Location = new Point(Entity.Location.X - 5, Entity.Location.Y); //Move Entity Left
+                    lock (lockObject) {
+                        if (Direction == 'R') {
+                            Entity.Location = new Point(Entity.Location.X + 5, Entity.Location.Y); //Move Entity Right
+                        } else {
+                            Entity.Location = new Point(Entity.Location.X - 5, Entity.Location.Y); //Move Entity Left
+                        }
+                        Entity.Image = i; //Change Image
+                        Entity.Refresh();
                     }
-                    Entity.Image = i; //Change Image
-                    Entity.Refresh();
                     Thread.Sleep(100);
                 }
             }
 
-            Rotate(Entity, m, Direction); //Rotate after end walking
+            //Rotate(Entity, m, Direction); //Rotate after end walking
         }
 
         #endregion
