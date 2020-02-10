@@ -30,7 +30,7 @@ namespace Doom_Screen_Saver {
         #endregion
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        int maxWalkDistance = 50;
+        int maxWalkDistance = 10;
         int spawnTime = 2000;
 
         bool IsPreviewMode = false;
@@ -146,13 +146,11 @@ namespace Doom_Screen_Saver {
                     RandomIoD = 1;
                 }
 
-
                 try {
                     new ManualResetEvent(false).WaitOne(spawnTime);
                 } catch (InvalidOperationException) {
                     System.Diagnostics.Debug.WriteLine("Resources Exhausted");
                 }
-
             }
 
         }
@@ -162,8 +160,9 @@ namespace Doom_Screen_Saver {
 
             var task1 = Walk(Entity, RMonster, 'R');
             var task2 = Walk(Entity, RMonster, 'L');
+            var task3 = Die(Entity, RMonster);
 
-            await Task.WhenAll(task1, task2);
+            await Task.WhenAll(task1, task2, task3);
         }
 
         private object lockObjectR = new object();
@@ -193,6 +192,34 @@ namespace Doom_Screen_Saver {
             Entity.Image = new Bitmap(path + "\\FRONT.png");
             Entity.Refresh();
         }
+
+        public async Task Die(PictureBox Entity, Monsters m) {
+
+            bool gib = false;
+
+            if (m == Monsters.ZombieMan || m == Monsters.ShotgunGuy || m == Monsters.Imp) { //Too lazy to add MachineGun gib anim
+                gib = new Random().Next(1, 11) > 6; // 40% probability to show gib animation
+            }
+
+            string path = MainDirectory + "\\Resources\\" + m;
+            List<Image> images = new List<Image>();
+            DirectoryInfo d = new DirectoryInfo(path);
+            foreach (var file in (gib == true ? d.GetFiles("G*.png") : d.GetFiles("D*.png"))) { //Load Animation Images
+                Bitmap image = new Bitmap(file.FullName);
+                images.Add(image);
+            }
+
+            foreach (Image i in images) {
+                try {
+                    lock (lockObjectR) {
+                        Entity.Image = i; //Change Image
+                        Entity.Refresh();
+                    }
+                    Thread.Sleep(100);
+                } catch (Exception) { }
+            }
+        }
+
 
         private object lockObject = new object();
         public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
