@@ -7,6 +7,7 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Linq;
 
 namespace Doom_Screen_Saver {
 
@@ -135,20 +136,36 @@ namespace Doom_Screen_Saver {
 
                 if (RandomIoD == 1) { //Show up from left side of screen
                     Entity.Location = new Point(LeftBound - 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith((i) =>  Walk(Entity, RMonster, 'L'));;
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
                     RandomIoD = 2;
                 } else if (RandomIoD == 2) { //Show up from right side of screen
                     Entity.Location = new Point(RightBound + 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith((i) =>  Walk(Entity, RMonster, 'R'));
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
                     RandomIoD = 1;
                 }
 
-                new ManualResetEvent(false).WaitOne(spawnTime);
+
+                try {
+                    new ManualResetEvent(false).WaitOne(spawnTime);
+                } catch (InvalidOperationException) {
+                    System.Diagnostics.Debug.WriteLine("Resources Exhausted");
+                }
+
             }
 
         }
 
-        public void Rotate(PictureBox Entity, Monsters m, char Direction) {
+        //TO-DO: Randomize this...
+        public async Task GetRandomTask(PictureBox Entity, Monsters RMonster) {
+
+            var task1 = Walk(Entity, RMonster, 'R');
+            var task2 = Walk(Entity, RMonster, 'L');
+
+            await Task.WhenAll(task1, task2);
+        }
+
+        private object lockObjectR = new object();
+        public async Task Rotate(PictureBox Entity, Monsters m, char Direction) {
 
             string path = MainDirectory + "\\Resources\\" + m;
             List<Image> images = new List<Image>();
@@ -161,9 +178,13 @@ namespace Doom_Screen_Saver {
             }
 
             foreach (Image i in images) {
-                Entity.Image = i; //Change Image
-                Entity.Refresh();
-                Thread.Sleep(100);
+                try {
+                    lock (lockObjectR) {
+                        Entity.Image = i; //Change Image
+                        Entity.Refresh();
+                    }
+                    Thread.Sleep(100);
+                } catch (Exception) { }
             }
 
             //Set Monster Looking Forward
@@ -172,9 +193,9 @@ namespace Doom_Screen_Saver {
         }
 
         private object lockObject = new object();
-        public void Walk(PictureBox Entity, Monsters m, char Direction) {
+        public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
 
-             CheckForIllegalCrossThreadCalls = false;
+             CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
 
             string path = MainDirectory + "\\Resources\\" + m;
             List<Image> images = new List<Image>();
@@ -206,7 +227,7 @@ namespace Doom_Screen_Saver {
                 }
             }
 
-            //Rotate(Entity, m, Direction); //Rotate after end walking
+            await Rotate(Entity, m, Direction); //Rotate after end walking
         }
 
         #endregion
