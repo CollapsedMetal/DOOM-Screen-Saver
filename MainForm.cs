@@ -30,9 +30,9 @@ namespace Doom_Screen_Saver {
         #endregion
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        int maxWalkDistance = 10;
+        int maxWalkDistance = 20;
         int spawnTime = 2000;
-
+        Random random = new Random();
         bool IsPreviewMode = false;
 
         public enum Monsters {
@@ -80,30 +80,31 @@ namespace Doom_Screen_Saver {
 
         #endregion
 
-        //protected override void OnPaintBackground(PaintEventArgs e) {
+        //For PNG Overlapping
+        protected override void OnPaintBackground(PaintEventArgs e) {
 
-        //    base.OnPaintBackground(e);
-        //    Graphics g = e.Graphics;
+            base.OnPaintBackground(e);
+            Graphics g = e.Graphics;
 
-        //    if (Parent != null) {
-        //        // Take each control in turn
-        //        int index = Parent.Controls.GetChildIndex(this);
-        //        for (int i = Parent.Controls.Count - 1; i > index; i--) {
-        //            Control c = Parent.Controls[i];
+            if (Parent != null) {
+                // Take each control in turn
+                int index = Parent.Controls.GetChildIndex(this);
+                for (int i = Parent.Controls.Count - 1; i > index; i--) {
+                    Control c = Parent.Controls[i];
 
-        //            // Check it's visible and overlaps this control
-        //            if (c.Bounds.IntersectsWith(Bounds) && c.Visible) {
-        //                // Load appearance of underlying control and redraw it on this background
-        //                Bitmap bmp = new Bitmap(c.Width, c.Height, g);
-        //                c.DrawToBitmap(bmp, c.ClientRectangle);
-        //                g.TranslateTransform(c.Left - Left, c.Top - Top);
-        //                g.DrawImageUnscaled(bmp, Point.Empty);
-        //                g.TranslateTransform(Left - c.Left, Top - c.Top);
-        //                bmp.Dispose();
-        //            }
-        //        }
-        //    }
-        //}
+                    // Check it's visible and overlaps this control
+                    if (c.Bounds.IntersectsWith(Bounds) && c.Visible) {
+                        // Load appearance of underlying control and redraw it on this background
+                        Bitmap bmp = new Bitmap(c.Width, c.Height, g);
+                        c.DrawToBitmap(bmp, c.ClientRectangle);
+                        g.TranslateTransform(c.Left - Left, c.Top - Top);
+                        g.DrawImageUnscaled(bmp, Point.Empty);
+                        g.TranslateTransform(Left - c.Left, Top - c.Top);
+                        bmp.Dispose();
+                    }
+                }
+            }
+        }
 
         #region GUI
 
@@ -114,6 +115,7 @@ namespace Doom_Screen_Saver {
             }
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+            ManualResetEvent res = new ManualResetEvent(false);
 
             //this.BackColor = Color.FromArgb(0, 0, 30);
             this.BackColor = Color.Magenta;
@@ -126,13 +128,13 @@ namespace Doom_Screen_Saver {
 
             while (true) {
 
-                Random rnd = new Random();
-                int RandomYStart = rnd.Next(1, BottomBound);
+                int RandomYStart = random.Next(1, BottomBound);
                 Monsters RMonster = GetRandMonster();
 
                 var Entity = CreateEntity("PictureBox");
                 Entity.SizeMode = PictureBoxSizeMode.AutoSize;
                 Entity.BackColor = Color.Transparent;
+                //Entity.BringToFront();
                 //Entity.BorderStyle = BorderStyle.FixedSingle;        
                 Controls.Add(Entity);
 
@@ -147,9 +149,9 @@ namespace Doom_Screen_Saver {
                 }
 
                 try {
-                    new ManualResetEvent(false).WaitOne(spawnTime);
+                    res.WaitOne(spawnTime); //Buggy... not catching exception
                 } catch (InvalidOperationException) {
-                    System.Diagnostics.Debug.WriteLine("Resources Exhausted");
+                    System.Diagnostics.Debug.WriteLine("Resources Exhausted?");
                 }
             }
 
@@ -189,8 +191,11 @@ namespace Doom_Screen_Saver {
             }
 
             //Set Monster Looking Forward
-            Entity.Image = new Bitmap(path + "\\FRONT.png");
-            Entity.Refresh();
+            try {
+                Entity.Image = new Bitmap(path + "\\FRONT.png");
+                Entity.Refresh();
+            } catch (Exception) { }
+
         }
 
         public async Task Die(PictureBox Entity, Monsters m) {
@@ -198,7 +203,7 @@ namespace Doom_Screen_Saver {
             bool gib = false;
 
             if (m == Monsters.ZombieMan || m == Monsters.ShotgunGuy || m == Monsters.Imp) { //Too lazy to add MachineGun gib anim
-                gib = new Random().Next(1, 11) > 6; // 40% probability to show gib animation
+                gib = random.Next(1, 11) > 6; // 40% probability to show gib animation
             }
 
             string path = MainDirectory + "\\Resources\\" + m;
@@ -213,13 +218,13 @@ namespace Doom_Screen_Saver {
                 try {
                     lock (lockObjectR) {
                         Entity.Image = i; //Change Image
+                        //Entity.SendToBack();
                         Entity.Refresh();
                     }
                     Thread.Sleep(100);
                 } catch (Exception) { }
             }
         }
-
 
         private object lockObject = new object();
         public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
@@ -232,7 +237,7 @@ namespace Doom_Screen_Saver {
             foreach (var file in d.GetFiles("WL*.png")) { //Load Animation Images
                 Bitmap image = new Bitmap(file.FullName);
                 if(Direction == 'R')
-                    image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
                     //image.RotateFlip(RotateFlipType.Rotate180FlipY);
                 images.Add(image);
             }
@@ -263,7 +268,6 @@ namespace Doom_Screen_Saver {
 
         public Monsters GetRandMonster() {
             Array values = Enum.GetValues(typeof(Monsters));
-            Random random = new Random();
             Monsters randomMonster = (Monsters)values.GetValue(random.Next(values.Length));
             return randomMonster;
         }
