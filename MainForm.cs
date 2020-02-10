@@ -131,13 +131,12 @@ namespace Doom_Screen_Saver {
             while (true) {
 
                 int RandomYStart = random.Next(1, BottomBound);
-                Monsters RMonster = GetRandMonster();
+                Monsters RMonster = GetRandMonster(); //Get random monster to spawn
 
                 var Entity = CreateEntity("PictureBox");
                 Entity.SizeMode = PictureBoxSizeMode.AutoSize;
                 Entity.BackColor = Color.Transparent;
-                //Entity.BringToFront();
-                //Entity.BorderStyle = BorderStyle.FixedSingle;        
+                //Entity.BringToFront();       
                 Controls.Add(Entity);
 
                 if (RandomIoD == 1) { //Show up from left side of screen
@@ -164,9 +163,9 @@ namespace Doom_Screen_Saver {
 
             var task1 = Walk(Entity, RMonster, 'R');
             var task2 = Walk(Entity, RMonster, 'L');
-            var task3 = Die(Entity, RMonster);
+            var die = Die(Entity, RMonster);
 
-            await Task.WhenAll(task1, task2, task3);
+            await Task.WhenAll(task1, task2, die);
         }
 
         private object lockObjectR = new object();
@@ -194,8 +193,11 @@ namespace Doom_Screen_Saver {
 
             //Set Monster Looking Forward
             try {
-                Entity.Image = new Bitmap(path + "\\FRONT.png");
-                Entity.Refresh();
+                lock (lockObjectR) {
+                    Entity.Image = new Bitmap(path + "\\FRONT.png");
+                    Entity.Refresh();
+                }
+                Thread.Sleep(random.Next(500, 4000)); //Kinda "idle" state
             } catch (Exception) { }
 
         }
