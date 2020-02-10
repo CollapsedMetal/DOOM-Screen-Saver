@@ -39,7 +39,8 @@ namespace Doom_Screen_Saver {
             ZombieMan = 1,
             ShotgunGuy = 2,
             MachineGuy = 3,
-            Pinky = 4
+            Imp = 4,
+            Pinky = 5
         }
 
         #region Constructors

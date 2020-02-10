@@ -92,6 +92,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="Resources\Imp\FRONT.png" />
+    <Content Include="Resources\Imp\RR2.png" />
+    <Content Include="Resources\Imp\RR1.png" />
+    <Content Include="Resources\Imp\WL1.png" />
+    <Content Include="Resources\Imp\WL2.png" />
+    <Content Include="Resources\Imp\WL3.png" />
+    <Content Include="Resources\Imp\WL4.png" />
     <Content Include="Resources\MachineGuy\WL4.png" />
     <Content Include="Resources\MachineGuy\WL1.png" />
     <Content Include="Resources\MachineGuy\WL2.png" />
