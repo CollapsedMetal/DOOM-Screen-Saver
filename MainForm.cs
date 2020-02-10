@@ -38,7 +38,8 @@ namespace Doom_Screen_Saver {
         public enum Monsters {
             ZombieMan = 1,
             ShotgunGuy = 2,
-            MachineGuy = 3
+            MachineGuy = 3,
+            Pinky = 4
         }
 
         #region Constructors

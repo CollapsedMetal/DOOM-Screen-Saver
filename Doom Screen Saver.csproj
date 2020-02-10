@@ -99,6 +99,12 @@
     <Content Include="Resources\MachineGuy\RR1.png" />
     <Content Include="Resources\MachineGuy\RR2.png" />
     <Content Include="Resources\MachineGuy\FRONT.png" />
+    <Content Include="Resources\Pinky\FRONT.png" />
+    <Content Include="Resources\Pinky\RR1.png" />
+    <Content Include="Resources\Pinky\WL1.png" />
+    <Content Include="Resources\Pinky\WL2.png" />
+    <Content Include="Resources\Pinky\WL3.png" />
+    <Content Include="Resources\Pinky\WL4.png" />
     <Content Include="Resources\ShotgunGuy\FRONT.png" />
     <Content Include="Resources\ShotgunGuy\RR1.png" />
     <Content Include="Resources\ShotgunGuy\RR2.png" />
