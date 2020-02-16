@@ -112,6 +112,7 @@
     <Content Include="Resources\Imp\WL2.png" />
     <Content Include="Resources\Imp\WL3.png" />
     <Content Include="Resources\Imp\WL4.png" />
+    <Content Include="Resources\LostSoul\M2.png" />
     <Content Include="Resources\MachineGuy\D1.png" />
     <Content Include="Resources\MachineGuy\D2.png" />
     <Content Include="Resources\MachineGuy\D3.png" />

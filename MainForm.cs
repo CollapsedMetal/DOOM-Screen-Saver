@@ -98,9 +98,8 @@ namespace Doom_Screen_Saver {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             ManualResetEvent res = new ManualResetEvent(false);
 
-            this.BackColor = Color.Black;
-            //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
-
+            //this.BackColor = Color.Black;
+            this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
 
             MainTimer.Interval = spawnTime;
             MainTimer.Tick += new System.EventHandler(timer_Tick);
@@ -119,11 +118,23 @@ namespace Doom_Screen_Saver {
 
             if (RandomIoD == 1) { //Show up from left side of screen
                 Entity.Location = new Point(LeftBound - 10, RandomYStart);
-                Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+
+                if (random.Next(1, 11) > 8) { // 20% probability to send lost soul flying
+                    Task.Factory.StartNew(() => LostSoulFly(Entity, 'R'));
+                } else {
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                }
+                
                 RandomIoD = 2;
             } else if (RandomIoD == 2) { //Show up from right side of screen
                 Entity.Location = new Point(RightBound + 10, RandomYStart);
-                Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+
+                if (random.Next(1, 11) > 8) { // 20% probability to send lost soul flying
+                    Task.Factory.StartNew(() => LostSoulFly(Entity, 'L'));
+                } else {
+                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                }
+                
                 RandomIoD = 1;
             }
         }
@@ -253,6 +264,43 @@ namespace Doom_Screen_Saver {
             }
 
             await Rotate(Entity, m, Direction); //Rotate after end walking
+        }
+
+
+        private object lockObjectL = new object();
+        public async Task LostSoulFly(PictureBox Entity, char Direction) {
+
+            CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
+
+            int screenSize = RightBound - LeftBound;
+            int lostSoulSpeed = monsterSpeed * 2;
+            int iter = (int)Math.Ceiling((double)screenSize / lostSoulSpeed) + 10;
+
+            Image image = Image.FromFile(MainDirectory + "\\Resources\\LostSoul\\M2.png"); //Change Image
+            if (Direction == 'R')
+                image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
+
+            Entity.Image = image;
+
+            for (int x = 0; x < iter; x++) {
+                try {
+                    lock (lockObject) {
+                        if (Direction == 'R') {
+                            Entity.Location = new Point(Entity.Location.X + lostSoulSpeed, Entity.Location.Y); //Move Entity Right
+                        } else {
+                            Entity.Location = new Point(Entity.Location.X - lostSoulSpeed, Entity.Location.Y); //Move Entity Left
+                        }
+                        Entity.Refresh();
+                    }
+                    Thread.Sleep(20);
+                } catch (Exception ex) {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+            }
+
+            //Dissapear
+            Entity.Dispose();
+            Controls.Remove(Entity);        
         }
 
         #endregion
