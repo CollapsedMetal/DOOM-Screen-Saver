@@ -31,7 +31,7 @@ namespace Doom_Screen_Saver {
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
         int maxWalkDistance = 50;
         int spawnTime = 2500;
-        int animationDelay = 100;
+        int animationDelay = 80;
         int monsterSpeed = 5;
         Random random = new Random();
         bool IsPreviewMode = false;
@@ -98,8 +98,8 @@ namespace Doom_Screen_Saver {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             ManualResetEvent res = new ManualResetEvent(false);
 
-            //this.BackColor = Color.Black;
-            this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
+            this.BackColor = Color.Black;
+            //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
 
             MainTimer.Interval = spawnTime;
             MainTimer.Tick += new System.EventHandler(timer_Tick);
