@@ -97,7 +97,8 @@ namespace Doom_Screen_Saver {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             ManualResetEvent res = new ManualResetEvent(false);
 
-            this.TransparencyKey = Color.FromArgb(0, 0, 0, 0);
+            this.BackColor = Color.Black;
+            //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0);
 
             while (true) {
 
@@ -199,14 +200,22 @@ namespace Doom_Screen_Saver {
             }
 
             //Dissapear
-            Thread.Sleep(animationDelay * 5);
-            for (int x = 50; x < 102; x++) {
-                Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
-                Thread.Sleep(animationDelay);
+            try {
+                Thread.Sleep(animationDelay * 10);
+                for (int x = 50; x < 102; x++) {
+                    Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                    Thread.Sleep(animationDelay);
+                }
+                Entity.SendToBack();
+                Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                Entity.Dispose();
+                Controls.Remove(Entity);
+            } catch (Exception) {
+                Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                Entity.Dispose();
+                Controls.Remove(Entity);
             }
-            Entity.Location = new Point(LeftBound - 50, Entity.Location.Y); //Move away!
-            Entity.Dispose();
-            Controls.Remove(Entity);
+
         }
 
         private object lockObject = new object();
@@ -221,7 +230,7 @@ namespace Doom_Screen_Saver {
                 Bitmap image = new Bitmap(file.FullName);
                 if (Direction == 'R')
                     image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
-                                                                      //image.RotateFlip(RotateFlipType.Rotate180FlipY);
+                    //image.RotateFlip(RotateFlipType.Rotate180FlipY);
                 images.Add(image);
             }
 
