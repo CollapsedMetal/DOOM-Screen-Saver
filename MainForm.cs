@@ -36,6 +36,7 @@ namespace Doom_Screen_Saver {
         Random random = new Random();
         bool IsPreviewMode = false;
         Color colToFadeTo;
+        System.Windows.Forms.Timer MainTimer = new System.Windows.Forms.Timer();
         int RightBound = Screen.PrimaryScreen.Bounds.Right;
         int LeftBound = Screen.PrimaryScreen.Bounds.Left;
         int BottomBound = Screen.PrimaryScreen.Bounds.Bottom;
@@ -98,35 +99,33 @@ namespace Doom_Screen_Saver {
             ManualResetEvent res = new ManualResetEvent(false);
 
             this.BackColor = Color.Black;
-            //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0);
+            //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
 
-            while (true) {
 
-                int RandomYStart = random.Next(1, BottomBound);
-                Monsters RMonster = GetRandMonster(); //Get random monster to spawn
+            MainTimer.Interval = spawnTime;
+            MainTimer.Tick += new System.EventHandler(timer_Tick);
+            MainTimer.Start();
+        }
 
-                var Entity = CreateEntity("PictureBox");
-                Entity.SizeMode = PictureBoxSizeMode.AutoSize;
-                Entity.BackColor = Color.Transparent;
-                Controls.Add(Entity);
+        //Make the magic...
+        private void timer_Tick(object sender, EventArgs e) {
+            int RandomYStart = random.Next(1, BottomBound);
+            Monsters RMonster = GetRandMonster(); //Get random monster to spawn
 
-                if (RandomIoD == 1) { //Show up from left side of screen
-                    Entity.Location = new Point(LeftBound - 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
-                    RandomIoD = 2;
-                } else if (RandomIoD == 2) { //Show up from right side of screen
-                    Entity.Location = new Point(RightBound + 10, RandomYStart);
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
-                    RandomIoD = 1;
-                }
+            var Entity = CreateEntity("PictureBox");
+            Entity.SizeMode = PictureBoxSizeMode.AutoSize;
+            Entity.BackColor = Color.Transparent;
+            Controls.Add(Entity);
 
-                try {
-                    res.WaitOne(spawnTime);
-                } catch (InvalidOperationException) {
-                    System.Diagnostics.Debug.WriteLine("Resources Exhausted?");
-                }
+            if (RandomIoD == 1) { //Show up from left side of screen
+                Entity.Location = new Point(LeftBound - 10, RandomYStart);
+                Task.Factory.StartNew(() => Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                RandomIoD = 2;
+            } else if (RandomIoD == 2) { //Show up from right side of screen
+                Entity.Location = new Point(RightBound + 10, RandomYStart);
+                Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                RandomIoD = 1;
             }
-
         }
 
         //TO-DO: Randomize this...
@@ -230,7 +229,7 @@ namespace Doom_Screen_Saver {
                 Bitmap image = new Bitmap(file.FullName);
                 if (Direction == 'R')
                     image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
-                    //image.RotateFlip(RotateFlipType.Rotate180FlipY);
+                                                                      //image.RotateFlip(RotateFlipType.Rotate180FlipY);
                 images.Add(image);
             }
 
@@ -287,6 +286,8 @@ namespace Doom_Screen_Saver {
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
             if (!IsPreviewMode) //disable exit functions for preview
             {
+                MainTimer.Stop();
+                MainTimer.Dispose();
                 Application.Exit();
             }
         }
@@ -294,6 +295,8 @@ namespace Doom_Screen_Saver {
         private void MainForm_Click(object sender, EventArgs e) {
             if (!IsPreviewMode) //disable exit functions for preview
             {
+                MainTimer.Stop();
+                MainTimer.Dispose();
                 Application.Exit();
             }
         }
@@ -302,7 +305,6 @@ namespace Doom_Screen_Saver {
         //it is impossible for the cursor to be at that position. That way, we
         //know if this variable has been set yet.
         Point OriginalLocation = new Point(int.MaxValue, int.MaxValue);
-
         private void MainForm_MouseMove(object sender, MouseEventArgs e) {
             if (!IsPreviewMode) //disable exit functions for preview
             {
@@ -312,6 +314,8 @@ namespace Doom_Screen_Saver {
                 }
                 //see if the mouse has moved more than 20 pixels in any direction. If it has, close the application.
                 if (Math.Abs(e.X - OriginalLocation.X) > 20 | Math.Abs(e.Y - OriginalLocation.Y) > 20) {
+                    MainTimer.Stop();
+                    MainTimer.Dispose();
                     Application.Exit();
                 }
             }
