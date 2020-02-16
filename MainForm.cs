@@ -7,7 +7,6 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
-using System.Linq;
 
 namespace Doom_Screen_Saver {
 
@@ -36,6 +35,11 @@ namespace Doom_Screen_Saver {
         int monsterSpeed = 5;
         Random random = new Random();
         bool IsPreviewMode = false;
+        Color colToFadeTo;
+        int RightBound = Screen.PrimaryScreen.Bounds.Right;
+        int LeftBound = Screen.PrimaryScreen.Bounds.Left;
+        int BottomBound = Screen.PrimaryScreen.Bounds.Bottom;
+        int RandomIoD = 1;
 
         public enum Monsters {
             ZombieMan = 1,
@@ -82,32 +86,6 @@ namespace Doom_Screen_Saver {
 
         #endregion
 
-        //For PNG Overlapping
-        protected override void OnPaintBackground(PaintEventArgs e) {
-
-            base.OnPaintBackground(e);
-            Graphics g = e.Graphics;
-
-            if (Parent != null) {
-                // Take each control in turn
-                int index = Parent.Controls.GetChildIndex(this);
-                for (int i = Parent.Controls.Count - 1; i > index; i--) {
-                    Control c = Parent.Controls[i];
-
-                    // Check it's visible and overlaps this control
-                    if (c.Bounds.IntersectsWith(Bounds) && c.Visible) {
-                        // Load appearance of underlying control and redraw it on this background
-                        Bitmap bmp = new Bitmap(c.Width, c.Height, g);
-                        c.DrawToBitmap(bmp, c.ClientRectangle);
-                        g.TranslateTransform(c.Left - Left, c.Top - Top);
-                        g.DrawImageUnscaled(bmp, Point.Empty);
-                        g.TranslateTransform(Left - c.Left, Top - c.Top);
-                        bmp.Dispose();
-                    }
-                }
-            }
-        }
-
         #region GUI
 
         private void MainForm_Shown(object sender, EventArgs e) {
@@ -119,14 +97,7 @@ namespace Doom_Screen_Saver {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             ManualResetEvent res = new ManualResetEvent(false);
 
-            //this.BackColor = Color.FromArgb(0, 0, 30);
-            this.BackColor = Color.Magenta;
-            this.TransparencyKey = Color.Magenta;
-
-            int RightBound = Screen.PrimaryScreen.Bounds.Right;
-            int LeftBound = Screen.PrimaryScreen.Bounds.Left;
-            int BottomBound = Screen.PrimaryScreen.Bounds.Bottom;
-            int RandomIoD = 1;
+            this.TransparencyKey = Color.FromArgb(0, 0, 0, 0);
 
             while (true) {
 
@@ -136,7 +107,6 @@ namespace Doom_Screen_Saver {
                 var Entity = CreateEntity("PictureBox");
                 Entity.SizeMode = PictureBoxSizeMode.AutoSize;
                 Entity.BackColor = Color.Transparent;
-                //Entity.BringToFront();       
                 Controls.Add(Entity);
 
                 if (RandomIoD == 1) { //Show up from left side of screen
@@ -222,27 +192,36 @@ namespace Doom_Screen_Saver {
                 try {
                     lock (lockObjectR) {
                         Entity.Image = i; //Change Image
-                        //Entity.SendToBack();
                         Entity.Refresh();
                     }
                     Thread.Sleep(animationDelay);
                 } catch (Exception) { }
             }
+
+            //Dissapear
+            Thread.Sleep(animationDelay * 5);
+            for (int x = 50; x < 102; x++) {
+                Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                Thread.Sleep(animationDelay);
+            }
+            Entity.Location = new Point(LeftBound - 50, Entity.Location.Y); //Move away!
+            Entity.Dispose();
+            Controls.Remove(Entity);
         }
 
         private object lockObject = new object();
         public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
 
-             CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
+            CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
 
             string path = MainDirectory + "\\Resources\\" + m;
             List<Image> images = new List<Image>();
             DirectoryInfo d = new DirectoryInfo(path);
             foreach (var file in d.GetFiles("WL*.png")) { //Load Animation Images
                 Bitmap image = new Bitmap(file.FullName);
-                if(Direction == 'R')
+                if (Direction == 'R')
                     image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
-                    //image.RotateFlip(RotateFlipType.Rotate180FlipY);
+                                                                      //image.RotateFlip(RotateFlipType.Rotate180FlipY);
                 images.Add(image);
             }
 
@@ -282,6 +261,16 @@ namespace Doom_Screen_Saver {
                 default:
                 throw new ArgumentException("Unknown class: " + name);
             }
+        }
+
+        private Image Lighter(Image imgLight, int level, int nRed, int nGreen, int nBlue) {
+            Graphics graphics = Graphics.FromImage(imgLight);
+            int conversion = (5 * (level - 50));
+            Pen pLight = new Pen(Color.FromArgb(conversion, nRed, nGreen, nBlue), imgLight.Width * 2);
+            graphics.DrawLine(pLight, -1, -1, imgLight.Width, imgLight.Height);
+            graphics.Save();
+            graphics.Dispose();
+            return imgLight;
         }
 
         #region User Input
