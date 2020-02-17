@@ -8,9 +8,11 @@ I'm a huge fan of Doom, so i've made this screensaver just for fun!
 
 Windows:
 
-```sh
-to-do
-```
+* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.0/DoomScreenSaver.scr)
+* Move downloaded DoomScreenSaver.scr to C:\Windows\System32
+* Right click on DoomScreenSaver.scr and choose "Install"
+* Done!
+
 ## Release History
 
 * 1.0.0
