@@ -7,6 +7,9 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Collections;
+using System.Linq;
+using Doom_Screen_Saver.Properties;
 
 namespace Doom_Screen_Saver {
 
@@ -30,6 +33,7 @@ namespace Doom_Screen_Saver {
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
         int maxWalkDistance = 50;
+        int minWalkDistance = 5;
         int spawnTime = 2500;
         int animationDelay = 80;
         int monsterSpeed = 5;
@@ -43,11 +47,11 @@ namespace Doom_Screen_Saver {
         int RandomIoD = 1;
 
         public enum Monsters {
-            ZombieMan = 1,
-            ShotgunGuy = 2,
-            MachineGuy = 3,
-            Imp = 4,
-            Pinky = 5
+            ZOMBIEMAN = 1,
+            SHOTGUNGUY = 2,
+            MACHINEGUY = 3,
+            IMP = 4,
+            PINKY = 5
         }
 
         #region Constructors
@@ -152,15 +156,13 @@ namespace Doom_Screen_Saver {
         private object lockObjectR = new object();
         public async Task Rotate(PictureBox Entity, Monsters m, char Direction) {
 
-            string path = MainDirectory + "\\Resources\\" + m;
-            List<Image> images = new List<Image>();
-            DirectoryInfo d = new DirectoryInfo(path);
-            foreach (var file in d.GetFiles("RR*.png")) { //Load Animation Images
-                Bitmap image = new Bitmap(file.FullName);
-                if (Direction == 'R')
-                    image.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                images.Add(image);
-            }
+            List<Image> images = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString().Contains(m.ToString() + (Direction == 'R' ? "_RR" : "_RL")))
+           .OrderBy(x => x.Key.ToString())
+           .Select(x => x.Value as Image )
+           .ToList();
 
             foreach (Image i in images) {
                 try {
@@ -172,13 +174,20 @@ namespace Doom_Screen_Saver {
                 } catch (Exception) { }
             }
 
+            Image Fimage = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString().Contains(m.ToString() + "_FRONT"))
+           .Select(x => x.Value as Image)
+           .Single();
+
             //Set Monster Looking Forward
             try {
                 lock (lockObjectR) {
-                    Entity.Image = new Bitmap(path + "\\FRONT.png");
+                    Entity.Image = new Bitmap(Fimage);
                     Entity.Refresh();
                 }
-                Thread.Sleep(random.Next(500, 4000)); //Kinda "idle" state
+                Thread.Sleep(random.Next(1000, 4000)); //Kinda "idle" state
             } catch (Exception) { }
 
         }
@@ -187,17 +196,17 @@ namespace Doom_Screen_Saver {
 
             bool gib = false;
 
-            if (m == Monsters.ZombieMan || m == Monsters.ShotgunGuy || m == Monsters.Imp) { //Too lazy to add MachineGun gib anim
+            if (m == Monsters.ZOMBIEMAN || m == Monsters.SHOTGUNGUY || m == Monsters.IMP) { //Too lazy to add MachineGun gib anim
                 gib = random.Next(1, 11) > 6; // 40% probability to show gib animation
             }
 
-            string path = MainDirectory + "\\Resources\\" + m;
-            List<Image> images = new List<Image>();
-            DirectoryInfo d = new DirectoryInfo(path);
-            foreach (var file in (gib == true ? d.GetFiles("G*.png") : d.GetFiles("D*.png"))) { //Load Animation Images
-                Bitmap image = new Bitmap(file.FullName);
-                images.Add(image);
-            }
+            List<Image> images = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString().Contains(m.ToString() + (gib == true ? "_G" : "_D")))
+           .OrderBy(x => x.Key.ToString())
+           .Select(x => x.Value as Image )
+           .ToList();
 
             foreach (Image i in images) {
                 try {
@@ -211,7 +220,7 @@ namespace Doom_Screen_Saver {
 
             //Dissapear
             try {
-                Thread.Sleep(animationDelay * 10);
+                Thread.Sleep(animationDelay * 20);
                 for (int x = 50; x < 102; x++) {
                     Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
                     Thread.Sleep(animationDelay);
@@ -233,19 +242,16 @@ namespace Doom_Screen_Saver {
 
             CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
 
-            string path = MainDirectory + "\\Resources\\" + m;
-            List<Image> images = new List<Image>();
-            DirectoryInfo d = new DirectoryInfo(path);
-            foreach (var file in d.GetFiles("WL*.png")) { //Load Animation Images
-                Bitmap image = new Bitmap(file.FullName);
-                if (Direction == 'R')
-                    image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
-                                                                      //image.RotateFlip(RotateFlipType.Rotate180FlipY);
-                images.Add(image);
-            }
+            List<Image> images = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString().Contains(m.ToString() + (Direction == 'R' ? "_WR" : "_WL")))
+            .OrderBy(x => x.Key.ToString())
+           .Select(x => x.Value as Image )
+           .ToList();
 
             Random rnd = new Random();
-            int iter = rnd.Next(1, maxWalkDistance); //Walk Random Distance
+            int iter = rnd.Next(minWalkDistance, maxWalkDistance); //Walk Random Distance
             for (int x = 0; x < iter; x++) {
                 foreach (Image i in images) {
                     try {
@@ -266,8 +272,6 @@ namespace Doom_Screen_Saver {
             await Rotate(Entity, m, Direction); //Rotate after end walking
         }
 
-
-        private object lockObjectL = new object();
         public async Task LostSoulFly(PictureBox Entity, char Direction) {
 
             CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
@@ -276,9 +280,12 @@ namespace Doom_Screen_Saver {
             int lostSoulSpeed = monsterSpeed * 2;
             int iter = (int)Math.Ceiling((double)screenSize / lostSoulSpeed) + 10;
 
-            Image image = Image.FromFile(MainDirectory + "\\Resources\\LostSoul\\M2.png"); //Change Image
-            if (Direction == 'R')
-                image.RotateFlip(RotateFlipType.RotateNoneFlipX); //Not Shure if this is the right way...
+            Image image = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString().Contains("LOSTSOUL" + (Direction == 'R' ? "_FR" : "_FL")))
+           .Select(x => x.Value as Image)
+           .Single();
 
             Entity.Image = image;
 
