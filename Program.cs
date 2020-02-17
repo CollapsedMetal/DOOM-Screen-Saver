@@ -25,8 +25,8 @@ namespace Doom_Screen_Saver {
                 } else if (args[0].ToLower().Trim().Substring(0, 2) == "/c") //configure
                   {
                     //inform the user no options can be set in this screen saver
-                    MessageBox.Show("This screensaver has no options that you can set",
-                        "Blue Screen Saver",
+                    MessageBox.Show("This screensaver has no options that you can set yet",
+                        "Doom Screen Saver",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 } else //an argument was passed, but it wasn't /s, /p, or /c, so we don't care wtf it was
