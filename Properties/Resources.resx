@@ -118,6 +118,57 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="HELLKNIGHT_D1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_D2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_D3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_D4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_D5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_D6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_D6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_FRONT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_FRONT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_RR1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_RR1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_RR2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_RR2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WL1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WL2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WL3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WL4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WR1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WR1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WR2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WR2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WR3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WR3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HELLKNIGHT_WR4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HELLKNIGHT_WR4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="IMP_D1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IMP_D1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

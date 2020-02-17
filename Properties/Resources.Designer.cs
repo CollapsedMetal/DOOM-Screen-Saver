@@ -63,6 +63,176 @@ namespace Doom_Screen_Saver.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D1 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D2 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D3 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D4 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D5 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_D6 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_D6", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_FRONT {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_FRONT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_RR1 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_RR1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_RR2 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_RR2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WL1 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WL1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WL2 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WL2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WL3 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WL3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WL4 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WL4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WR1 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WR1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WR2 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WR2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WR3 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WR3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HELLKNIGHT_WR4 {
+            get {
+                object obj = ResourceManager.GetObject("HELLKNIGHT_WR4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IMP_D1 {
             get {
                 object obj = ResourceManager.GetObject("IMP_D1", resourceCulture);

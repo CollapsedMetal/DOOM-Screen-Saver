@@ -51,7 +51,8 @@ namespace Doom_Screen_Saver {
             SHOTGUNGUY = 2,
             MACHINEGUY = 3,
             IMP = 4,
-            PINKY = 5
+            PINKY = 5,
+            HELLKNIGHT = 6
         }
 
         #region Constructors
