@@ -30,7 +30,7 @@ Windows:
 
 Daniel Weise – dwb@gael.team
 
-Credits to id software on Doom Sprites
+Assets being used on this project are property of their owners: **id Software**.
 
 Distributed under the GNU General Public License v3.0 license. See ``LICENSE`` for more information.
 
