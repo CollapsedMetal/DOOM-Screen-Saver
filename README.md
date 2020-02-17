@@ -28,6 +28,8 @@ to-do
 
 Daniel Weise – dwb@gael.team
 
+Distributed under the GNU General Public License v3.0 license. See ``LICENSE`` for more information.
+
 [https://github.com/CollapsedMetal/DOOM-Screen-Saver](https://github.com/CollapsedMetal/DOOM-Screen-Saver)
 
 ## Contributing
