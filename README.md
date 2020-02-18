@@ -8,14 +8,17 @@ I'm a huge fan of Doom, so i've made this screensaver just for fun!
 
 Windows:
 
-```sh
-to-do
-```
+* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.0/DoomScreenSaver.scr)
+* Move downloaded DoomScreenSaver.scr to C:\Windows\System32
+* Right click on DoomScreenSaver.scr and choose "Install"
+* Done!
+
 ## Release History
 
-* 1.0.0
+* 1.0
     * First release
-
+* 1.1
+    * FIXED: Lock Object on dissapear dead bodies (caused crash)
 ## To-Do
 
 * Fix .png overlays
@@ -28,7 +31,7 @@ to-do
 
 Daniel Weise – dwb@gael.team
 
-Credits to id software on Doom Sprites
+Assets being used on this project are property of their owners: **id Software**.
 
 Distributed under the GNU General Public License v3.0 license. See ``LICENSE`` for more information.
 
