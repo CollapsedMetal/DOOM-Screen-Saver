@@ -15,9 +15,10 @@ Windows:
 
 ## Release History
 
-* 1.0.0
+* 1.0
     * First release
-
+* 1.1
+    * FIXED: Lock Object on dissapear dead bodies (caused crash)
 ## To-Do
 
 * Fix .png overlays
