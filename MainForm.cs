@@ -46,6 +46,8 @@ namespace Doom_Screen_Saver {
         int BottomBound = Screen.PrimaryScreen.Bounds.Bottom;
         int RandomIoD = 1;
 
+        private object lockObject = new object();
+
         public enum Monsters {
             ZOMBIEMAN = 1,
             SHOTGUNGUY = 2,
@@ -154,7 +156,6 @@ namespace Doom_Screen_Saver {
             await Task.WhenAll(task1, task2, die);
         }
 
-        private object lockObjectR = new object();
         public async Task Rotate(PictureBox Entity, Monsters m, char Direction) {
 
             List<Image> images = Resources.ResourceManager
@@ -167,7 +168,7 @@ namespace Doom_Screen_Saver {
 
             foreach (Image i in images) {
                 try {
-                    lock (lockObjectR) {
+                    lock (lockObject) {
                         Entity.Image = i; //Change Image
                         Entity.Refresh();
                     }
@@ -184,7 +185,7 @@ namespace Doom_Screen_Saver {
 
             //Set Monster Looking Forward
             try {
-                lock (lockObjectR) {
+                lock (lockObject) {
                     Entity.Image = new Bitmap(Fimage);
                     Entity.Refresh();
                 }
@@ -211,7 +212,7 @@ namespace Doom_Screen_Saver {
 
             foreach (Image i in images) {
                 try {
-                    lock (lockObjectR) {
+                    lock (lockObject) {
                         Entity.Image = i; //Change Image
                         Entity.Refresh();
                     }
@@ -223,22 +224,28 @@ namespace Doom_Screen_Saver {
             try {
                 Thread.Sleep(animationDelay * 20);
                 for (int x = 50; x < 102; x++) {
-                    Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                    lock (lockObject) {
+                        Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                    }
                     Thread.Sleep(animationDelay);
                 }
-                Entity.SendToBack();
-                Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
-                Entity.Dispose();
-                Controls.Remove(Entity);
+                lock (lockObject) {
+                    Entity.SendToBack();
+                    Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                    Entity.Dispose();
+                    Controls.Remove(Entity);
+                }
+
             } catch (Exception) {
-                Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
-                Entity.Dispose();
-                Controls.Remove(Entity);
+                lock (lockObject) {
+                    Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                    Entity.Dispose();
+                    Controls.Remove(Entity);
+                }
             }
 
         }
 
-        private object lockObject = new object();
         public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
 
             CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
