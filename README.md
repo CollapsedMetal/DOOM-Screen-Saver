@@ -29,7 +29,7 @@ Windows:
 
 ## Meta
 
-Daniel Weise – dwb@gael.team
+Daniel Weise – dwb@gael.cloud
 
 Assets being used on this project are property of their owners: **id Software**.
 
