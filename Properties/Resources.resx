@@ -118,6 +118,48 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CACODEMON_D1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_D7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_D7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_FRONT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_FRONT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_RL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_RL1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_RR1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_RR1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_WL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_WL1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_WL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_WL2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_WR1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_WR1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CACODEMON_WR2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CACODEMON_WR2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="HELLKNIGHT_D1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HELLKNIGHT_D1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

@@ -32,18 +32,24 @@ namespace Doom_Screen_Saver {
         #endregion
 
         string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+
+        //Behaviour parameters
         int maxWalkDistance = 50;
         int minWalkDistance = 5;
-        int spawnTime = 1000;
+        int spawnTime = 2800;
         int animationDelay = 80;
         int monsterSpeed = 5;
+
         Random random = new Random();
         bool IsPreviewMode = false;
         Color colToFadeTo;
+
         System.Windows.Forms.Timer MainTimer = new System.Windows.Forms.Timer();
+
         int RightBound = Screen.PrimaryScreen.Bounds.Right;
         int LeftBound = Screen.PrimaryScreen.Bounds.Left;
         int BottomBound = Screen.PrimaryScreen.Bounds.Bottom;
+
         int RandomIoD = 1;
 
         private object lockObject = new object();
@@ -54,7 +60,8 @@ namespace Doom_Screen_Saver {
             MACHINEGUY = 3,
             IMP = 4,
             PINKY = 5,
-            HELLKNIGHT = 6
+            HELLKNIGHT = 6,
+            CACODEMON = 7
         }
 
         #region Constructors
