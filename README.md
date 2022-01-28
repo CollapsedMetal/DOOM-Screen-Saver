@@ -8,7 +8,7 @@ I'm a huge fan of Doom, so i've made this screensaver just for fun!
 
 Windows:
 
-* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.1/DoomScreenSaver.scr)
+* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.2/DoomScreenSaver.scr)
 * Move downloaded DoomScreenSaver.scr to C:\Windows\System32
 * Right click on DoomScreenSaver.scr and choose "Install"
 * Done!
@@ -19,6 +19,12 @@ Windows:
     * First release
 * 1.1
     * FIXED: Lock Object on dissapear dead bodies (caused crash)
+* 1.2
+   * Added Cacodemon 👻
+   * Added Doom II Logo
+   * Some Bug Fixes
+   * Made some tweaks
+
 ## To-Do
 
 * Fix .png overlays
