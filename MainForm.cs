@@ -113,6 +113,34 @@ namespace Doom_Screen_Saver {
             this.BackColor = Color.Black;
             //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
 
+            //Set DOOM Logo!
+            PictureBox Logo = new PictureBox();
+            Logo.Image = Resources.ResourceManager
+           .GetResourceSet(CultureInfo.CurrentCulture, true, true)
+           .Cast<DictionaryEntry>()
+           .Where(x => x.Value.GetType() == typeof(Bitmap) && x.Key.ToString() == "doom2")
+           .Select(x => x.Value as Image)
+           .Single();
+            Logo.Location = new Point((this.Width / 2) - 400, (this.Height / 2) - 235); //Center Image
+            Logo.SizeMode = PictureBoxSizeMode.AutoSize;
+            Logo.BackColor = Color.Transparent;
+            Controls.Add(Logo);
+            Logo.Refresh();
+
+            Thread.Sleep(2000);
+
+            //Fade Doom Logo
+            for (int x = 50; x < 100; x++) { 
+                Logo.Image = Lighter(Logo.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                Logo.Refresh();
+                Thread.Sleep(30);
+            }
+
+            //Dispose Logo
+            Logo.Dispose();
+            Controls.Remove(Logo);
+
+            //Start!
             MainTimer.Interval = spawnTime;
             MainTimer.Tick += new EventHandler(timer_Tick);
             MainTimer.Start();

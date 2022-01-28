@@ -148,6 +148,7 @@
     <None Include="Resources\CACODEMON_WL2.png" />
     <None Include="Resources\CACODEMON_WR1.png" />
     <None Include="Resources\CACODEMON_WR2.png" />
+    <None Include="Resources\doom2.png" />
     <Content Include="Resources\IMP_D1.png" />
     <Content Include="Resources\IMP_D2.png" />
     <Content Include="Resources\IMP_D3.png" />

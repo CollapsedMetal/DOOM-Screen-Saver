@@ -55,7 +55,7 @@ namespace Doom_Screen_Saver {
         private static void UIThreadException(object sender, ThreadExceptionEventArgs t) {
             DialogResult result = DialogResult.Cancel;
             try {
-                result = ShowThreadExceptionDialog("Windows Forms Error", t.Exception);
+                result = ShowThreadExceptionDialog("Doom Screen Saver Error", t.Exception);
             } catch {
                 try {
                     MessageBox.Show("Fatal Windows Forms Error",
@@ -99,7 +99,11 @@ namespace Doom_Screen_Saver {
         }
 
         //show screen saver
-        static void ShowSrc() {          
+        static void ShowSrc() {
+
+
+
+
             MainForm src = new MainForm(Screen.PrimaryScreen.Bounds);
             src.Show();
         }

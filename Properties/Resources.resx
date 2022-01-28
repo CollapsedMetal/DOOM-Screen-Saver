@@ -160,6 +160,9 @@
   <data name="CACODEMON_WR2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CACODEMON_WR2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="doom2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\doom2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="HELLKNIGHT_D1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HELLKNIGHT_D1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
