@@ -31,13 +31,11 @@ namespace Doom_Screen_Saver {
 
         #endregion
 
-        string MainDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-
         //Behaviour parameters
         int maxWalkDistance = 50;
         int minWalkDistance = 5;
-        int spawnTime = 2800;
-        int animationDelay = 80;
+        int spawnTime = 2500;
+        int animationDelay = 60;
         int monsterSpeed = 5;
 
         Random random = new Random();
@@ -116,7 +114,7 @@ namespace Doom_Screen_Saver {
             //this.TransparencyKey = Color.FromArgb(0, 0, 0, 0); // Transparent bg
 
             MainTimer.Interval = spawnTime;
-            MainTimer.Tick += new System.EventHandler(timer_Tick);
+            MainTimer.Tick += new EventHandler(timer_Tick);
             MainTimer.Start();
         }
 
@@ -144,9 +142,9 @@ namespace Doom_Screen_Saver {
                 Entity.Location = new Point(RightBound + 10, RandomYStart);
 
                 if (random.Next(1, 11) > 8) { // 20% probability to send lost soul flying
-                    Task.Factory.StartNew(() => LostSoulFly(Entity, 'L'));
+                    Task.Factory.StartNew(async () => await LostSoulFly(Entity, 'L'));
                 } else {
-                    Task.Factory.StartNew(() => Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                    Task.Factory.StartNew(async () => await Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
                 }
                 
                 RandomIoD = 1;
