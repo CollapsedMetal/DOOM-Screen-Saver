@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Collections;
@@ -34,7 +33,7 @@ namespace Doom_Screen_Saver {
         //Behaviour parameters
         int maxWalkDistance = 50;
         int minWalkDistance = 5;
-        int spawnTime = 2500;
+        int spawnTime = 1500;
         int animationDelay = 60;
         int monsterSpeed = 5;
 
@@ -50,7 +49,7 @@ namespace Doom_Screen_Saver {
 
         int RandomIoD = 1;
 
-        private object lockObject = new object();
+        private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public enum Monsters {
             ZOMBIEMAN = 1,
@@ -130,11 +129,16 @@ namespace Doom_Screen_Saver {
             Thread.Sleep(2000);
 
             //Fade Doom Logo
-            for (int x = 50; x < 100; x++) { 
-                Logo.Image = Lighter(Logo.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+            Image logoSource = new Bitmap(Logo.Image);
+            for (int x = 50; x < 100; x++) {
+                Bitmap faded = Lighter(logoSource, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                Image prev = Logo.Image;
+                Logo.Image = faded;
                 Logo.Refresh();
+                if (prev != null && prev != logoSource) prev.Dispose();
                 Thread.Sleep(30);
             }
+            logoSource.Dispose();
 
             //Dispose Logo
             Logo.Dispose();
@@ -148,6 +152,7 @@ namespace Doom_Screen_Saver {
 
         //Make the magic...
         private void timer_Tick(object sender, EventArgs e) {
+            if (_cts.IsCancellationRequested) return;
             int RandomYStart = random.Next(1, BottomBound);
             Monsters RMonster = GetRandMonster(); //Get random monster to spawn
 
@@ -162,31 +167,44 @@ namespace Doom_Screen_Saver {
                 if (random.Next(1, 11) > 8) { // 20% probability to send lost soul flying
                     Task.Factory.StartNew(async () => await LostSoulFly(Entity, 'R'));
                 } else {
-                    Task.Factory.StartNew(async () => await Walk(Entity, RMonster, 'R')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                    Task.Run(async () => { await Walk(Entity, RMonster, 'R'); await GetRandomTask(Entity, RMonster); });
                 }
-                
+
                 RandomIoD = 2;
+
             } else if (RandomIoD == 2) { //Show up from right side of screen
                 Entity.Location = new Point(RightBound + 10, RandomYStart);
 
                 if (random.Next(1, 11) > 8) { // 20% probability to send lost soul flying
                     Task.Factory.StartNew(async () => await LostSoulFly(Entity, 'L'));
                 } else {
-                    Task.Factory.StartNew(async () => await Walk(Entity, RMonster, 'L')).ContinueWith(async (i) => await GetRandomTask(Entity, RMonster));
+                    Task.Run(async () => { await Walk(Entity, RMonster, 'L'); await GetRandomTask(Entity, RMonster); });
                 }
-                
+
                 RandomIoD = 1;
             }
         }
 
         //TO-DO: Randomize this...
         public async Task GetRandomTask(PictureBox Entity, Monsters RMonster) {
+            if (_cts.IsCancellationRequested) return;
+            char dir = random.Next(0, 2) == 0 ? 'R' : 'L';
+            await Walk(Entity, RMonster, dir);
+            if (_cts.IsCancellationRequested) return;
+            await Die(Entity, RMonster);
+        }
 
-            var task1 = Walk(Entity, RMonster, 'R');
-            var task2 = Walk(Entity, RMonster, 'L');
-            var die = Die(Entity, RMonster);
-
-            await Task.WhenAll(task1, task2, die);
+        //Marshals UI mutations onto the UI thread to prevent cross-thread state corruption.
+        private void RunOnUi(Action action) {
+            if (IsDisposed || Disposing || !IsHandleCreated) return;
+            try {
+                if (InvokeRequired) Invoke(action);
+                else action();
+            } catch (ObjectDisposedException) {
+                //Control was disposed between the guard check and the invoke; safe to ignore.
+            } catch (InvalidOperationException) {
+                //Handle destroyed during shutdown; safe to ignore.
+            }
         }
 
         public async Task Rotate(PictureBox Entity, Monsters m, char Direction) {
@@ -200,13 +218,13 @@ namespace Doom_Screen_Saver {
            .ToList();
 
             foreach (Image i in images) {
-                try {
-                    lock (lockObject) {
-                        Entity.Image = i; //Change Image
-                        Entity.Refresh();
-                    }
-                    Thread.Sleep(animationDelay);
-                } catch (Exception) { }
+                if (_cts.IsCancellationRequested) return;
+                RunOnUi(() => {
+                    if (Entity.IsDisposed) return;
+                    Entity.Image = i; //Change Image
+                    Entity.Refresh();
+                });
+                Thread.Sleep(animationDelay);
             }
 
             Image Fimage = Resources.ResourceManager
@@ -217,13 +235,12 @@ namespace Doom_Screen_Saver {
            .Single();
 
             //Set Monster Looking Forward
-            try {
-                lock (lockObject) {
-                    Entity.Image = new Bitmap(Fimage);
-                    Entity.Refresh();
-                }
-                Thread.Sleep(random.Next(1000, 4000)); //Kinda "idle" state
-            } catch (Exception) { }
+            RunOnUi(() => {
+                if (Entity.IsDisposed) return;
+                Entity.Image = new Bitmap(Fimage);
+                Entity.Refresh();
+            });
+            Thread.Sleep(random.Next(1000, 4000)); //Kinda "idle" state
 
         }
 
@@ -244,43 +261,53 @@ namespace Doom_Screen_Saver {
            .ToList();
 
             foreach (Image i in images) {
-                try {
-                    lock (lockObject) {
-                        Entity.Image = i; //Change Image
-                        Entity.Refresh();
-                    }
-                    Thread.Sleep(animationDelay);
-                } catch (Exception) { }
+                if (_cts.IsCancellationRequested) return;
+                RunOnUi(() => {
+                    if (Entity.IsDisposed) return;
+                    Entity.Image = i; //Change Image
+                    Entity.Refresh();
+                });
+                Thread.Sleep(animationDelay);
             }
 
             //Dissapear
             try {
                 Thread.Sleep(animationDelay * 20);
+                if (_cts.IsCancellationRequested) return;
+                Image fadeSource = Entity.Image;
                 for (int x = 50; x < 102; x++) {
-                    lock (lockObject) {
-                        Entity.Image = Lighter(Entity.Image, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
-                    }
+                    if (_cts.IsCancellationRequested) return;
+                    Bitmap faded = Lighter(fadeSource, x, colToFadeTo.R, colToFadeTo.G, colToFadeTo.B);
+                    RunOnUi(() => {
+                        if (Entity.IsDisposed) return;
+                        Image prev = Entity.Image;
+                        Entity.Image = faded;
+                        Entity.Refresh();
+                        if (prev != null && prev != fadeSource) prev.Dispose();
+                    });
                     Thread.Sleep(animationDelay);
                 }
-                lock (lockObject) {
+                RunOnUi(() => {
+                    if (Entity.IsDisposed) return;
                     Entity.SendToBack();
                     Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                    Entity.Image = null;
                     Entity.Dispose();
                     Controls.Remove(Entity);
-                }
+                });
 
             } catch (Exception) {
-                lock (lockObject) {
+                RunOnUi(() => {
+                    if (Entity.IsDisposed) return;
                     Entity.Location = new Point(LeftBound - 150, Entity.Location.Y); //Move away!
+                    Entity.Image = null;
                     Entity.Dispose();
                     Controls.Remove(Entity);
-                }
+                });
             }
         }
 
         public async Task Walk(PictureBox Entity, Monsters m, char Direction) {
-
-            CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
 
             List<Image> images = Resources.ResourceManager
            .GetResourceSet(CultureInfo.CurrentCulture, true, true)
@@ -293,19 +320,20 @@ namespace Doom_Screen_Saver {
             Random rnd = new Random();
             int iter = rnd.Next(minWalkDistance, maxWalkDistance); //Walk Random Distance
             for (int x = 0; x < iter; x++) {
+                if (_cts.IsCancellationRequested) return;
                 foreach (Image i in images) {
-                    try {
-                        lock (lockObject) {
-                            if (Direction == 'R') {
-                                Entity.Location = new Point(Entity.Location.X + monsterSpeed, Entity.Location.Y); //Move Entity Right
-                            } else {
-                                Entity.Location = new Point(Entity.Location.X - monsterSpeed, Entity.Location.Y); //Move Entity Left
-                            }
-                            Entity.Image = i; //Change Image
-                            Entity.Refresh();
+                    if (_cts.IsCancellationRequested) return;
+                    RunOnUi(() => {
+                        if (Entity.IsDisposed) return;
+                        if (Direction == 'R') {
+                            Entity.Location = new Point(Entity.Location.X + monsterSpeed, Entity.Location.Y); //Move Entity Right
+                        } else {
+                            Entity.Location = new Point(Entity.Location.X - monsterSpeed, Entity.Location.Y); //Move Entity Left
                         }
-                        Thread.Sleep(animationDelay);
-                    } catch (Exception) { }
+                        Entity.Image = i; //Change Image
+                        Entity.Refresh();
+                    });
+                    Thread.Sleep(animationDelay);
                 }
             }
 
@@ -313,8 +341,6 @@ namespace Doom_Screen_Saver {
         }
 
         public async Task LostSoulFly(PictureBox Entity, char Direction) {
-
-            CheckForIllegalCrossThreadCalls = false; //Shure there's a better way to update GUI from another Thread
 
             int screenSize = RightBound - LeftBound;
             int lostSoulSpeed = monsterSpeed * 2;
@@ -327,27 +353,31 @@ namespace Doom_Screen_Saver {
            .Select(x => x.Value as Image)
            .Single();
 
-            Entity.Image = image;
+            RunOnUi(() => {
+                if (Entity.IsDisposed) return;
+                Entity.Image = image;
+            });
 
             for (int x = 0; x < iter; x++) {
-                try {
-                    lock (lockObject) {
-                        if (Direction == 'R') {
-                            Entity.Location = new Point(Entity.Location.X + lostSoulSpeed, Entity.Location.Y); //Move Entity Right
-                        } else {
-                            Entity.Location = new Point(Entity.Location.X - lostSoulSpeed, Entity.Location.Y); //Move Entity Left
-                        }
-                        Entity.Refresh();
+                if (_cts.IsCancellationRequested) return;
+                RunOnUi(() => {
+                    if (Entity.IsDisposed) return;
+                    if (Direction == 'R') {
+                        Entity.Location = new Point(Entity.Location.X + lostSoulSpeed, Entity.Location.Y); //Move Entity Right
+                    } else {
+                        Entity.Location = new Point(Entity.Location.X - lostSoulSpeed, Entity.Location.Y); //Move Entity Left
                     }
-                    Thread.Sleep(20);
-                } catch (Exception ex) {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                }
+                    Entity.Refresh();
+                });
+                Thread.Sleep(20);
             }
 
             //Dissapear
-            Entity.Dispose();
-            Controls.Remove(Entity);        
+            RunOnUi(() => {
+                if (Entity.IsDisposed) return;
+                Entity.Dispose();
+                Controls.Remove(Entity);
+            });
         }
 
         #endregion
@@ -366,14 +396,14 @@ namespace Doom_Screen_Saver {
             }
         }
 
-        private Image Lighter(Image imgLight, int level, int nRed, int nGreen, int nBlue) {
-            Graphics graphics = Graphics.FromImage(imgLight);
+        private Bitmap Lighter(Image imgLight, int level, int nRed, int nGreen, int nBlue) {
+            Bitmap copy = new Bitmap(imgLight);
             int conversion = (5 * (level - 50));
-            Pen pLight = new Pen(Color.FromArgb(conversion, nRed, nGreen, nBlue), imgLight.Width * 2);
-            graphics.DrawLine(pLight, -1, -1, imgLight.Width, imgLight.Height);
-            graphics.Save();
-            graphics.Dispose();
-            return imgLight;
+            using (Graphics graphics = Graphics.FromImage(copy))
+            using (Pen pLight = new Pen(Color.FromArgb(conversion, nRed, nGreen, nBlue), copy.Width * 2)) {
+                graphics.DrawLine(pLight, -1, -1, copy.Width, copy.Height);
+            }
+            return copy;
         }
 
         #region User Input
@@ -381,6 +411,7 @@ namespace Doom_Screen_Saver {
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
             if (!IsPreviewMode) //disable exit functions for preview
             {
+                _cts.Cancel();
                 MainTimer.Stop();
                 MainTimer.Dispose();
                 Application.Exit();
@@ -390,6 +421,7 @@ namespace Doom_Screen_Saver {
         private void MainForm_Click(object sender, EventArgs e) {
             if (!IsPreviewMode) //disable exit functions for preview
             {
+                _cts.Cancel();
                 MainTimer.Stop();
                 MainTimer.Dispose();
                 Application.Exit();
@@ -409,6 +441,7 @@ namespace Doom_Screen_Saver {
                 }
                 //see if the mouse has moved more than 20 pixels in any direction. If it has, close the application.
                 if (Math.Abs(e.X - OriginalLocation.X) > 20 | Math.Abs(e.Y - OriginalLocation.Y) > 20) {
+                    _cts.Cancel();
                     MainTimer.Stop();
                     MainTimer.Dispose();
                     Application.Exit();

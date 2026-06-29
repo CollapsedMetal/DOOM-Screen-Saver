@@ -17,7 +17,6 @@ namespace Doom_Screen_Saver {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
                     ShowSrc();
-                    Application.Run();
                 } else if (args[0].ToLower().Trim().Substring(0, 2) == "/p") //preview
                   {
                     //show the screen saver preview
@@ -37,7 +36,6 @@ namespace Doom_Screen_Saver {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
                     ShowSrc();
-                    Application.Run();
                 }
             } else //no arguments were passed
               {
@@ -48,7 +46,6 @@ namespace Doom_Screen_Saver {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
                 ShowSrc();
-                Application.Run();
             }
         }
 
@@ -100,12 +97,7 @@ namespace Doom_Screen_Saver {
 
         //show screen saver
         static void ShowSrc() {
-
-
-
-
-            MainForm src = new MainForm(Screen.PrimaryScreen.Bounds);
-            src.Show();
+            Application.Run(new MainForm(Screen.PrimaryScreen.Bounds));
         }
     }
 }
