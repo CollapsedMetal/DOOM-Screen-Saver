@@ -8,7 +8,7 @@ I'm a huge fan of Doom, so i've made this screensaver just for fun!
 
 Windows:
 
-* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.2/DoomScreenSaver.scr)
+* [Download](https://github.com/CollapsedMetal/DOOM-Screen-Saver/releases/download/v1.3/DoomScreenSaver.scr)
 * Move downloaded DoomScreenSaver.scr to C:\Windows\System32
 * Right click on DoomScreenSaver.scr and choose "Install"
 * Done!
@@ -24,6 +24,8 @@ Windows:
    * Added Doom II Logo
    * Some Bug Fixes
    * Made some tweaks
+* 1.3
+   * Bug fixes and performance improvements
 
 ## To-Do
 
